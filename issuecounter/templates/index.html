@@ -32,7 +32,7 @@
 			}
 
 			input[type="textbox"]{
-				width:25em;
+				width:27em;
 				padding:1em;
 			}
 
@@ -59,7 +59,7 @@
 		<div class="main-content">
 			<form method="post" class="center" name="input-form" id="input-form">
 				{% csrf_token %}
-				<input type="textbox" name="url" placeholder="enter URL, ex:https://github.com/Shippable/support" class="url"></input>
+				<input type="textbox" name="url" placeholder="Github repo URL, ex:https://github.com/Shippable/support" class="url"></input>
 				<input type="submit" value="Go" class="go"></input>
 			</form>
 
