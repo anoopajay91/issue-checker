@@ -12,6 +12,7 @@ of the entire JSON which currently makes the response content heavy. Didn't have
 The main code is present inside folder issuecounter/
 
 check views.py - it contains functions that are used to display and compute
+
 check templates/index.html - it contains html and jquery ajax function that calls and updates HTML
 
 Link to the live website: http://issue-checker.herokuapp.com/
