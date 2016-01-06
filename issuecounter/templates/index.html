@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+	<head>
+		<title> Github Issues Checker </title>
+
+		<style type="text/css">
+
+			body{
+				font-family: 'Indie Flower', cursive;
+			}
+
+			.center{
+				width: 50%;
+				margin: auto;
+				text-align: center;
+				padding-top: 10%;
+				padding-bottom: 2%;
+			}
+
+			.results{
+				width: 50%;
+				margin: auto;
+				padding: 2em;
+				border: 0.2em solid black;
+				display: none;
+			}
+
+			.loading{
+				margin: auto;
+				text-align: center;
+				font-size: 1em;
+				display:none;
+			}
+
+			input[type="textbox"]{
+				width:25em;
+				padding:1em;
+			}
+
+			.go{
+				border-radius: 2em;
+				color: black;
+				background-color: #4CAF50;
+				padding: 0.2em 1em;
+				font-size:  1.5em;
+				font-weight: bold;
+				font-family: 'Indie Flower', cursive;
+			}
+
+			span{
+				font-family: 'Slabo 27px', serif;
+			}
+
+		</style>
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+	</head>
+	<body>
+		<div class="main-content">
+			<form method="post" class="center">
+				<input type="textbox" name="url" placeholder="enter URL, ex:https://github.com/Shippable/support" class="url"></input>
+				<input type="button" value="Go" class="go"></input>
+			</form>
+
+			<div class="loading"><i class="fa fa-spinner fa-3x fa-spin"></i></div>
+
+			<div class="results">
+				<b>Given url:</b> <span class="result-url"></span><br/>
+				<b>Total number of issues:</b> <span class="total_issues"></span><br/>
+				<b>Number of open issues that were opened in the last 24 hours:</b> <span class="last_24_issues"></span><br/>
+				<b>Number of open issues that were opened more than 24 hours ago but less than 7 days ago:</b> <span class="before_24_less_than_7_issues"></span><br/>
+				<b>Number of open issues that were opened more than 7 days ago:</b> <span class="greater_than_7_issues"></span><br/>
+			</div>
+		</div>
+	</body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+
+
+	<script type="text/javascript">
+		// action={% url 'issues:fetch_info' %}
+
+		$(".go").click(function(){
+			$(".results").css("display","none");
+			
+			$(".loading").css("display","block");
+			url = $(".url").val().trim();
+			postData = {'url':url,
+						"csrfmiddlewaretoken" : "{{csrf_token}}"
+						};
+			$.post(
+				"{% url 'issues:fetch_info' %}",
+				postData,
+				function(data){
+
+					$(".loading").css("display","none");
+					$(".result-url").text(data.url);
+					$(".total_issues").text(data.total_issues);
+					$(".before_24_less_than_7_issues").text(data.before_24_less_than_7_issues);
+					$(".last_24_issues").text(data.last_24_issues);
+					$(".greater_than_7_issues").text(data.greater_than_7_issues);
+					$(".results").css("display","block");
+
+				});
+		});
+	</script>
+</html>
