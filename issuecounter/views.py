@@ -89,9 +89,6 @@ def greater_than_7(last_24_issues,before_24_less_than_7_issues,total_issues):
 	return total_issues - (last_24_issues + before_24_less_than_7_issues) #older than 7 days would be the total issues minus the issues that were raised up until 7 days back
 
 
-# def issues_count(url):
-# 	r = requests.get('https://api.github.com/repos/Shippable/support') # make a request to api.github.com to fetch information about the URL
-# 	json_text = json.loads(r.text) # convert response to json
-# 	return HttpResponse(json_text)
-# 	issues_count = json_text["open_issues_count"] # find out open issues count
+def snake(request):
+	return render(request,'issues.html')
 	

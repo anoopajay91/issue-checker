@@ -1,8 +1,308 @@
 <!DOCTYPE html>
-	<head>
-		<title> Github Issues </title>
-	</head>
-	<body>
-		{{ url }}
-	</body>
-</html>
+<html>
+<head>
+    <title>Snake and Ladder</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+
+	<style type="text/css">
+		.coin{
+			display: none;
+			position: relative;
+			color: white;
+		}
+
+        .coin2{
+            display: none;
+            position: relative;
+            color: red;
+        }
+
+		body{
+			overflow-x: hidden;
+		}
+
+        input[type="button"]{
+            border-radius: 25px;
+            color: black;
+            background-color: #4CAF50;
+            padding: 2px 10px;
+            font-size:  20px;
+            font-weight: bold;
+            font-family: 'Indie Flower', cursive;
+        }
+
+        .dice-value{
+            /*display: inline-block;*/
+            display: none;
+            vertical-align: top;
+            padding:5px;
+            margin: 5px;
+            border:2px solid black;
+        }
+
+        .update{
+            font-family: 'Indie Flower', cursive;
+        }
+
+	</style>
+</head>
+<body>
+	<span class="coin"><i class="fa fa-stop-circle"></i></i></span>
+    <span class="coin2"><i class="fa fa-stop-circle"></i></i></span>
+    <div style="height:50px">
+    	<input type="button" value="Start a new game" class="new-game"/>
+    	&nbsp;&nbsp;&nbsp;&nbsp;
+    	<input type="button" id="nextMove" value="Next Move" class="move" />
+        &nbsp;&nbsp;&nbsp;&nbsp; You are white, computer is red.
+    </div>
+
+    <canvas id="game-board" width="650" height="650">
+    </canvas>
+
+    <div class="dice-value">
+        <p class="update">
+            
+        </p> 
+    </div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<script type="text/javascript">        
+        var squares = new Array();
+
+        var canvas = document.getElementById("game-board");
+        var context = canvas.getContext("2d");
+        var contextText = canvas.getContext("2d");
+        var squareSize = canvas.height / 10;
+           
+        var _currentPos = 0;
+        var _compCurrentPos = 0;  
+
+        function RenderSquareBoard() 
+        {        
+            var colorA = "#6599FF";
+            var colorB = "#4CAF50";
+
+            var initRow = 1; var totalRows = 10; var initcolumn = 1; var totalColumns = 10;
+
+            var x = 0; var y = canvas.height - squareSize;
+
+            var columnNr = 1; var leftToRight = true;
+            for (var row = initRow; row <= totalRows; row++) 
+            {
+                if (leftToRight) 
+                {
+                    x = 0;
+                }
+                else 
+                {
+                    x = canvas.width - squareSize;
+                }
+
+                for (var column = initcolumn; column <= totalColumns; column++) 
+                {
+                    if (columnNr % 2 == 0) 
+                    {
+                        context.fillStyle = colorA;
+                    }
+                    else 
+                    {
+                        context.fillStyle = colorB;
+                    }
+
+                    context.fillRect(x, y, squareSize, squareSize);
+
+                    squares[columnNr] = x.toString() + ',' + y.toString();
+
+                    contextText.font = '15px Slabo';
+                    contextText.fillStyle = "black";
+                    contextText.fillText(columnNr, x, y + squareSize);
+
+                    if (leftToRight) 
+                        x += squareSize;
+                    else 
+                        x -= squareSize;
+
+                    columnNr++;
+                }
+
+                y -= squareSize;
+                leftToRight = !leftToRight;
+            }
+        }
+
+        function RenderSnakeAndLadders()
+        {
+            var img = new Image();
+            img.onload = function () 
+            {
+            context.drawImage(img, 66, 23,307,300);
+            };
+            img.src = "http://oi67.tinypic.com/169n71u.jpg";
+
+            var img1 = new Image();
+            img1.onload = function () 
+            {
+            context.drawImage(img1, 2, 400,246,240);
+            };
+            img1.src = "http://oi67.tinypic.com/169n71u.jpg";
+
+            var img2 = new Image();
+            img2.onload = function () 
+            {
+            context.drawImage(img2, 262, 140,307,300);
+            };
+            img2.src = "http://oi64.tinypic.com/25jcw2q.jpg";
+
+            var img3 = new Image();
+            img3.onload = function () 
+            {
+            context.drawImage(img3, 400, 400,174,170);
+            };
+            img3.src = "http://oi64.tinypic.com/25jcw2q.jpg";
+
+            var img4 = new Image();
+            img4.onload = function () {
+                context.drawImage(img4, 57, 166);
+            };
+            img4.src = "http://oi63.tinypic.com/yyyag.jpg";
+
+            var img5 = new Image();
+            img5.onload = function () 
+            {
+                context.drawImage(img5, 322, 366);
+            };
+            img5.src = "http://oi63.tinypic.com/yyyag.jpg";   
+
+            var img6 = new Image();
+            img6.onload = function () 
+            {
+                context.drawImage(img6, 585, 20, 65, 350);
+            };
+            img6.src = "http://oi63.tinypic.com/yyyag.jpg";           
+        }
+
+        function initGame() 
+        {
+            window.location.reload();           
+        }
+
+        function GenerateRandomNumber(max) 
+        {
+            var rnd = Math.floor( (Math.random() * max) + 1 )
+            if (rnd == 0)
+            {
+                rnd = 1;
+            }
+        return rnd;
+        }
+
+        function move(){
+            _currentPos = nextMoveBoth(".coin",_currentPos);
+            _compCurrentPos = nextMoveBoth(".coin2",_compCurrentPos);
+        }
+
+        function nextMoveBoth(coin_class,_currentPos)
+        {
+            if( coin_class == ".coin" )
+            {
+                $(".dice-value").css("display","inline-block");
+                $(".update").empty();
+            }
+
+            var newMove = GenerateRandomNumber(6);
+            
+            if( coin_class == ".coin" )
+                $(".update").append("You got "+newMove);
+            else
+                $(".update").append("</br>Computer got "+newMove);
+
+            if (newMove + _currentPos <=100)
+                _currentPos = _currentPos + newMove;
+
+            switch (_currentPos) 
+            {
+            //ladder
+            case 6:
+            _currentPos = 46;
+            break;
+            //ladder
+            case 39:
+            _currentPos = 79;
+            break;
+            //ladder
+            case 50:
+            _currentPos = 91;
+            break;
+
+            //snake
+            case 99:
+            _currentPos = 55;
+            break;
+            //snake
+            case 40:
+            _currentPos = 4;
+            break;
+            //snake
+            case 32:
+            _currentPos = 14;
+            break; 
+            //snake
+            case 72:
+            _currentPos = 36;
+            break;             
+            }
+
+            var coordinates = squares[_currentPos];
+            coordinates = coordinates.split(',');
+            console.log(coordinates);
+
+            if ( coin_class == ".coin"){
+                $(".coin").css({
+                            "left" : parseInt(coordinates[0])+squareSize/2,
+                            "top" : parseInt(coordinates[1])+50+squareSize,
+                            "display": "block"
+                            });
+                }
+            else{
+                $(".coin2").css({
+                            "left" : parseInt(coordinates[0])+squareSize/1.5,
+                            "top" : parseInt(coordinates[1])+50+squareSize/2,
+                            "display": "block"
+                            });
+            }
+
+
+            if (_currentPos == 100)
+            {
+                if ( coin_class == ".coin")
+                    alert("Congratulations, you have won the game :) Game will be reset.");
+                else
+                    alert("You lost the game :( Game will be reset.");
+                initGame();
+            }
+
+            return _currentPos;
+        }        
+
+</script>
+
+<script>
+
+$(document).ready(function(){
+	RenderSquareBoard();
+    RenderSnakeAndLadders(); 
+});
+
+$(".new-game").click(function(){
+    initGame();
+});
+
+$(".move").click(function(){
+    move();
+});
+
+</script>
+</html> 
